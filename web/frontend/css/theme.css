@@ -1,0 +1,493 @@
+/* ========================================
+   主题样式 - theme.css
+   智能CPU水冷系统Web上位机
+   支持浅色和深色主题切换
+   ======================================== */
+
+/* ========== 深色主题 ========== */
+body.dark-theme {
+    /* 颜色变量 - 深色主题 */
+    --color-primary: #3b82f6;
+    --color-primary-hover: #2563eb;
+    --color-secondary: #94a3b8;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-info: #3b82f6;
+    
+    /* 背景颜色 */
+    --bg-primary: #1e293b;
+    --bg-secondary: #0f172a;
+    --bg-tertiary: #334155;
+    --bg-hover: #475569;
+    
+    /* 文字颜色 */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --text-inverse: #0f172a;
+    
+    /* 边框颜色 */
+    --border-color: #334155;
+    --border-color-hover: #475569;
+    
+    /* 阴影 - 深色主题使用更柔和的阴影 */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* ========== 主题切换动画 ========== */
+body {
+    transition: background-color var(--transition-normal), 
+                color var(--transition-normal);
+}
+
+/* 所有需要主题切换动画的元素 */
+.header,
+.footer,
+.data-card,
+.chart-container,
+.control-section,
+.health-score-card,
+.subsystem-status,
+.fault-list-container,
+.config-section,
+.modal-content,
+.notification,
+input,
+select,
+.btn-secondary,
+.mode-btn,
+.status-item,
+.fault-item,
+.theme-option,
+.info-item {
+    transition: background-color var(--transition-normal),
+                color var(--transition-normal),
+                border-color var(--transition-normal),
+                box-shadow var(--transition-normal);
+}
+
+/* ========== 深色主题特定样式调整 ========== */
+
+/* 深色主题下的主题切换按钮图标 */
+body.dark-theme .theme-toggle .icon::before {
+    content: '☀️';
+}
+
+body:not(.dark-theme) .theme-toggle .icon::before {
+    content: '🌙';
+}
+
+/* 深色主题下的输入框 */
+body.dark-theme input,
+body.dark-theme select {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+body.dark-theme input:focus,
+body.dark-theme select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+body.dark-theme input::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* 深色主题下的按钮 */
+body.dark-theme .btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .btn-secondary:hover:not(:disabled) {
+    background-color: var(--bg-hover);
+    border-color: var(--border-color-hover);
+}
+
+/* 深色主题下的数据卡片悬停效果 */
+body.dark-theme .data-card:hover {
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.6);
+}
+
+/* 深色主题下的健康度圆环背景 */
+body.dark-theme .score-bg {
+    stroke: var(--bg-tertiary);
+}
+
+/* 深色主题下的模态框背景 */
+body.dark-theme .modal,
+body.dark-theme .loading-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* 深色主题下的通知消息 */
+body.dark-theme .notification {
+    background-color: var(--bg-primary);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.6);
+}
+
+/* 深色主题下的状态标签 */
+body.dark-theme .data-status.normal,
+body.dark-theme .status-badge.normal {
+    background-color: rgba(16, 185, 129, 0.2);
+}
+
+body.dark-theme .data-status.warning,
+body.dark-theme .status-badge.warning {
+    background-color: rgba(245, 158, 11, 0.2);
+}
+
+body.dark-theme .data-status.danger,
+body.dark-theme .status-badge.fault {
+    background-color: rgba(239, 68, 68, 0.2);
+}
+
+/* 深色主题下的模式按钮 */
+body.dark-theme .mode-btn {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .mode-btn:hover {
+    background-color: var(--bg-hover);
+}
+
+body.dark-theme .mode-btn.active {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: var(--color-primary);
+}
+
+/* 深色主题下的主题选择器 */
+body.dark-theme .theme-option {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .theme-option:hover {
+    background-color: var(--bg-hover);
+}
+
+body.dark-theme .theme-option.active {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: var(--color-primary);
+}
+
+/* 深色主题下的故障项 */
+body.dark-theme .fault-item {
+    background-color: var(--bg-tertiary);
+}
+
+body.dark-theme .fault-item:hover {
+    background-color: var(--bg-hover);
+}
+
+/* 深色主题下的状态项 */
+body.dark-theme .status-item {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .status-item:hover {
+    background-color: var(--bg-hover);
+}
+
+/* 深色主题下的信息项 */
+body.dark-theme .info-item {
+    background-color: var(--bg-tertiary);
+}
+
+/* 深色主题下的评分状态 */
+body.dark-theme .score-status {
+    background-color: var(--bg-tertiary);
+}
+
+/* 深色主题下的模式指示器 */
+body.dark-theme .mode-indicator {
+    background-color: var(--bg-tertiary);
+}
+
+/* 深色主题下的历史控制面板 */
+body.dark-theme .history-controls {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+}
+
+/* ========== 主题切换过渡效果 ========== */
+
+/* 为图表添加主题切换过渡 */
+.chart {
+    transition: opacity var(--transition-normal);
+}
+
+body.theme-transitioning .chart {
+    opacity: 0.5;
+}
+
+/* 为图标添加旋转动画 */
+.theme-toggle.transitioning {
+    animation: themeRotate var(--transition-normal) ease-in-out;
+}
+
+@keyframes themeRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========== 高对比度模式支持 ========== */
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #94a3b8;
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+    
+    body.dark-theme {
+        --border-color: #64748b;
+        --bg-tertiary: #475569;
+    }
+    
+    .data-card,
+    .chart-container,
+    .control-section,
+    .config-section {
+        border-width: 2px;
+    }
+}
+
+/* ========== 减少动画模式支持 ========== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .status-dot {
+        animation: none;
+    }
+    
+    .data-card.warning .data-value,
+    .data-card.danger .data-value {
+        animation: none;
+    }
+}
+
+/* ========== 系统主题偏好自动适配 ========== */
+@media (prefers-color-scheme: dark) {
+    /* 如果用户系统设置为深色模式，且未手动设置主题，则自动使用深色主题 */
+    body:not(.light-theme):not(.dark-theme) {
+        /* 应用深色主题变量 */
+        --color-primary: #3b82f6;
+        --color-primary-hover: #2563eb;
+        --color-secondary: #94a3b8;
+        
+        --bg-primary: #1e293b;
+        --bg-secondary: #0f172a;
+        --bg-tertiary: #334155;
+        --bg-hover: #475569;
+        
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --text-tertiary: #94a3b8;
+        --text-inverse: #0f172a;
+        
+        --border-color: #334155;
+        --border-color-hover: #475569;
+        
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* ========== 打印模式主题 ========== */
+@media print {
+    /* 打印时强制使用浅色主题 */
+    body,
+    body.dark-theme {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --bg-tertiary: #f1f5f9;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+    }
+    
+    /* 移除阴影以节省墨水 */
+    .data-card,
+    .chart-container,
+    .control-section,
+    .config-section {
+        box-shadow: none !important;
+        border: 1px solid var(--border-color) !important;
+    }
+}
+
+/* ========== 主题特定的图表样式 ========== */
+
+/* 浅色主题图表配色 */
+body:not(.dark-theme) {
+    --chart-bg: #ffffff;
+    --chart-text: #1e293b;
+    --chart-grid: #e2e8f0;
+    --chart-line-1: #3b82f6;
+    --chart-line-2: #10b981;
+    --chart-line-3: #f59e0b;
+    --chart-line-4: #ef4444;
+    --chart-line-5: #8b5cf6;
+    --chart-line-6: #06b6d4;
+}
+
+/* 深色主题图表配色 */
+body.dark-theme {
+    --chart-bg: #1e293b;
+    --chart-text: #f1f5f9;
+    --chart-grid: #334155;
+    --chart-line-1: #60a5fa;
+    --chart-line-2: #34d399;
+    --chart-line-3: #fbbf24;
+    --chart-line-4: #f87171;
+    --chart-line-5: #a78bfa;
+    --chart-line-6: #22d3ee;
+}
+
+/* ========== 主题切换辅助类 ========== */
+
+/* 仅在浅色主题显示 */
+.light-only {
+    display: block;
+}
+
+body.dark-theme .light-only {
+    display: none;
+}
+
+/* 仅在深色主题显示 */
+.dark-only {
+    display: none;
+}
+
+body.dark-theme .dark-only {
+    display: block;
+}
+
+/* ========== 主题切换按钮状态 ========== */
+.theme-toggle[data-theme="light"] .icon::before {
+    content: '🌙';
+}
+
+.theme-toggle[data-theme="dark"] .icon::before {
+    content: '☀️';
+}
+
+/* ========== 自定义滚动条主题 ========== */
+
+/* 浅色主题滚动条 */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bg-hover);
+}
+
+/* Firefox滚动条 */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-tertiary) var(--bg-secondary);
+}
+
+/* ========== 焦点可见性增强 ========== */
+
+/* 键盘导航时显示焦点轮廓 */
+body:not(.mouse-user) *:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* 鼠标用户不显示焦点轮廓 */
+body.mouse-user *:focus {
+    outline: none;
+}
+
+/* ========== 主题过渡状态 ========== */
+body.theme-transitioning * {
+    transition-duration: var(--transition-normal) !important;
+}
+
+/* ========== 颜色盲友好模式 ========== */
+body.colorblind-mode {
+    /* 使用更易区分的颜色 */
+    --color-success: #0077bb;  /* 蓝色代替绿色 */
+    --color-warning: #ee7733;  /* 橙色 */
+    --color-danger: #cc3311;   /* 红色 */
+    --color-info: #009988;     /* 青色 */
+}
+
+/* ========== 主题预设 ========== */
+
+/* 高对比度浅色主题 */
+body.high-contrast-light {
+    --color-primary: #0000ff;
+    --bg-primary: #ffffff;
+    --text-primary: #000000;
+    --border-color: #000000;
+}
+
+/* 高对比度深色主题 */
+body.high-contrast-dark {
+    --color-primary: #00ffff;
+    --bg-primary: #000000;
+    --text-primary: #ffffff;
+    --border-color: #ffffff;
+}
+
+/* ========== 主题切换性能优化 ========== */
+
+/* 使用 CSS containment 优化渲染性能 */
+.data-card,
+.chart-container,
+.control-section,
+.config-section {
+    contain: layout style paint;
+}
+
+/* 使用 will-change 提示浏览器优化 */
+.theme-toggle,
+.nav-btn,
+.btn {
+    will-change: transform, background-color;
+}
+
+/* 主题切换时禁用 will-change */
+body:not(.theme-transitioning) .theme-toggle,
+body:not(.theme-transitioning) .nav-btn,
+body:not(.theme-transitioning) .btn {
+    will-change: auto;
+}

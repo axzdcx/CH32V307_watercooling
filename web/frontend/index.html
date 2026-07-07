@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="智能CPU水冷健康管理系统Web上位机">
+    <title>智能CPU水冷系统 - Web上位机</title>
+    
+    <!-- 引入CSS样式文件 -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/theme.css">
+    
+    <!-- 引入ECharts库 (本地) -->
+    <script src="js/lib/echarts.min.js"></script>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>智能CPU水冷系统</h1>
+                <span class="subtitle">Web上位机监控平台</span>
+            </div>
+            
+            <nav class="nav">
+                <button class="nav-btn active" data-page="dashboard">
+                    <span class="icon">📊</span>
+                    <span>仪表盘</span>
+                </button>
+                <button class="nav-btn" data-page="history">
+                    <span class="icon">📈</span>
+                    <span>历史数据</span>
+                </button>
+                <button class="nav-btn" data-page="control">
+                    <span class="icon">🎛️</span>
+                    <span>控制面板</span>
+                </button>
+                <button class="nav-btn" data-page="health">
+                    <span class="icon">🏥</span>
+                    <span>健康诊断</span>
+                </button>
+                <button class="nav-btn" data-page="config">
+                    <span class="icon">⚙️</span>
+                    <span>配置</span>
+                </button>
+            </nav>
+            
+            <div class="header-actions">
+                <!-- 连接状态指示器 -->
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">未连接</span>
+                </div>
+                
+                <!-- 主题切换按钮 -->
+                <button class="theme-toggle" id="themeToggle" title="切换主题">
+                    <span class="icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <!-- 仪表盘页面 -->
+        <section class="page active" id="dashboardPage">
+            <div class="page-header">
+                <h2>实时监控仪表盘</h2>
+                <div class="mode-indicator" id="modeIndicator">
+                    <span class="mode-label">当前模式：</span>
+                    <span class="mode-value">均衡</span>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- CPU温度卡片 -->
+                <div class="data-card" data-type="cpuTemp">
+                    <div class="card-header">
+                        <span class="card-icon">🌡️</span>
+                        <h3>CPU温度</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="data-value" id="cpuTempValue">--</div>
+                        <div class="data-unit">°C</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="data-status normal">正常</span>
+                        <span class="data-range">正常范围: 30-80°C</span>
+                    </div>
+                </div>
+                
+                <!-- 水温卡片 -->
+                <div class="data-card" data-type="waterTemp">
+                    <div class="card-header">
+                        <span class="card-icon">💧</span>
+                        <h3>水温</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="data-value" id="waterTempValue">--</div>
+                        <div class="data-unit">°C</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="data-status normal">正常</span>
+                        <span class="data-range">正常范围: 20-45°C</span>
+                    </div>
+                </div>
+                
+                <!-- 流量卡片 -->
+                <div class="data-card" data-type="flowRate">
+                    <div class="card-header">
+                        <span class="card-icon">🌊</span>
+                        <h3>流量</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="data-value" id="flowRateValue">--</div>
+                        <div class="data-unit">L/h</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="data-status normal">正常</span>
+                        <span class="data-range">正常范围: 80-150 L/h</span>
+                    </div>
+                </div>
+                
+                <!-- 泵转速卡片 -->
+                <div class="data-card" data-type="pumpSpeed">
+                    <div class="card-header">
+                        <span class="card-icon">⚙️</span>
+                        <h3>泵转速</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="data-value" id="pumpSpeedValue">--</div>
+                        <div class="data-unit">RPM</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="data-status normal">正常</span>
+                        <span class="data-range">正常范围: 1500-3000 RPM</span>
+                    </div>
+                </div>
+                
+                <!-- 风扇转速卡片 -->
+                <div class="data-card" data-type="fanSpeed">
+                    <div class="card-header">
+                        <span class="card-icon">🌀</span>
+                        <h3>风扇转速</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="data-value" id="fanSpeedValue">--</div>
+                        <div class="data-unit">RPM</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="data-status normal">正常</span>
+                        <span class="data-range">正常范围: 800-2500 RPM</span>
+                    </div>
+                </div>
+                
+                <!-- 功耗卡片 -->
+                <div class="data-card" data-type="power">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <h3>功耗</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="data-value" id="powerValue">--</div>
+                        <div class="data-unit">W</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="data-status normal">正常</span>
+                        <span class="data-range">正常范围: 15-40 W</span>
+                    </div>
+                </div>
+
+                <!-- TDS水质卡片 -->
+                <div class="data-card" data-type="tds">
+                    <div class="card-header">
+                        <span class="card-icon">💧</span>
+                        <h3>水质TDS</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="data-value" id="tdsValue">--</div>
+                        <div class="data-unit">ppm</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="data-status normal" id="tdsStatus">正常</span>
+                        <span class="data-range" id="tdsLevel">优质水</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 实时趋势图 -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>实时数据趋势</h3>
+                    <div class="chart-controls">
+                        <select id="realtimeChartType" class="chart-type-select">
+                            <option value="cpuTemp">CPU温度</option>
+                            <option value="waterTemp">水温</option>
+                            <option value="flowRate">流量</option>
+                            <option value="pumpSpeed">泵转速</option>
+                            <option value="fanSpeed">风扇转速</option>
+                            <option value="power">功耗</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart" id="realtimeChart"></div>
+            </div>
+        </section>
+
+        <!-- 历史数据页面 -->
+        <section class="page" id="historyPage">
+            <div class="page-header">
+                <h2>历史数据分析</h2>
+            </div>
+            
+            <div class="history-controls">
+                <div class="control-group">
+                    <label for="historyStartTime">开始时间：</label>
+                    <input type="datetime-local" id="historyStartTime" class="time-input">
+                </div>
+                
+                <div class="control-group">
+                    <label for="historyEndTime">结束时间：</label>
+                    <input type="datetime-local" id="historyEndTime" class="time-input">
+                </div>
+                
+                <div class="control-group">
+                    <label for="historyDataType">数据类型：</label>
+                    <select id="historyDataType" class="data-type-select">
+                        <option value="all">全部</option>
+                        <option value="cpuTemp">CPU温度</option>
+                        <option value="waterTemp">水温</option>
+                        <option value="flowRate">流量</option>
+                        <option value="pumpSpeed">泵转速</option>
+                        <option value="fanSpeed">风扇转速</option>
+                        <option value="power">功耗</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" id="queryHistoryBtn">查询</button>
+                <button class="btn btn-secondary" id="exportCsvBtn">导出CSV</button>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>历史数据图表</h3>
+                    <div class="chart-info" id="historyChartInfo">
+                        <span>数据点数: <span id="dataPointCount">0</span></span>
+                    </div>
+                </div>
+                <div class="chart large" id="historyChart"></div>
+            </div>
+        </section>
+
+        <!-- 控制面板页面 -->
+        <section class="page" id="controlPage">
+            <div class="page-header">
+                <h2>系统控制面板</h2>
+            </div>
+            
+            <div class="control-panel">
+                <!-- 运行模式选择 -->
+                <div class="control-section">
+                    <h3>运行模式</h3>
+                    <div class="mode-selector">
+                        <button class="mode-btn" data-mode="silent">
+                            <span class="mode-icon">🔇</span>
+                            <span class="mode-name">静音模式</span>
+                            <span class="mode-desc">低噪音，适合办公</span>
+                        </button>
+                        <button class="mode-btn active" data-mode="balanced">
+                            <span class="mode-icon">⚖️</span>
+                            <span class="mode-name">均衡模式</span>
+                            <span class="mode-desc">性能与噪音平衡</span>
+                        </button>
+                        <button class="mode-btn" data-mode="performance">
+                            <span class="mode-icon">🚀</span>
+                            <span class="mode-name">性能模式</span>
+                            <span class="mode-desc">最大散热性能</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- PID参数调节 -->
+                <div class="control-section">
+                    <h3>PID参数调节</h3>
+                    <div class="pid-controls">
+                        <div class="pid-control-group">
+                            <label for="pidKp">比例系数 (Kp)：</label>
+                            <input type="number" id="pidKp" class="pid-input" min="0" max="10" step="0.1" value="1.0">
+                            <span class="pid-value" id="pidKpValue">1.0</span>
+                        </div>
+                        
+                        <div class="pid-control-group">
+                            <label for="pidKi">积分系数 (Ki)：</label>
+                            <input type="number" id="pidKi" class="pid-input" min="0" max="5" step="0.1" value="0.5">
+                            <span class="pid-value" id="pidKiValue">0.5</span>
+                        </div>
+                        
+                        <div class="pid-control-group">
+                            <label for="pidKd">微分系数 (Kd)：</label>
+                            <input type="number" id="pidKd" class="pid-input" min="0" max="2" step="0.01" value="0.1">
+                            <span class="pid-value" id="pidKdValue">0.1</span>
+                        </div>
+                        
+                        <div class="pid-actions">
+                            <button class="btn btn-primary" id="applyPidBtn">应用参数</button>
+                            <button class="btn btn-secondary" id="resetPidBtn">重置默认</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 系统操作 -->
+                <div class="control-section">
+                    <h3>系统操作</h3>
+                    <div class="system-actions">
+                        <button class="btn btn-warning" id="resetSystemBtn">
+                            <span class="icon">🔄</span>
+                            <span>重置系统</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 健康诊断页面 -->
+        <section class="page" id="healthPage">
+            <div class="page-header">
+                <h2>系统健康诊断</h2>
+            </div>
+            
+            <div class="health-dashboard">
+                <!-- 健康度评分 -->
+                <div class="health-score-card">
+                    <h3>系统健康度</h3>
+                    <div class="health-score-display">
+                        <div class="score-circle" id="healthScoreCircle">
+                            <svg viewBox="0 0 200 200">
+                                <circle class="score-bg" cx="100" cy="100" r="90"></circle>
+                                <circle class="score-progress" cx="100" cy="100" r="90" id="scoreProgress"></circle>
+                            </svg>
+                            <div class="score-text">
+                                <span class="score-value" id="healthScoreValue">--</span>
+                                <span class="score-unit">分</span>
+                            </div>
+                        </div>
+                        <div class="score-status" id="healthScoreStatus">
+                            <span class="status-icon">✅</span>
+                            <span class="status-text">系统运行正常</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 子系统状态 -->
+                <div class="subsystem-status">
+                    <h3>子系统状态</h3>
+                    <div class="status-grid">
+                        <div class="status-item" data-subsystem="pump">
+                            <span class="status-icon">⚙️</span>
+                            <span class="status-name">水泵</span>
+                            <span class="status-badge normal">正常</span>
+                        </div>
+                        <div class="status-item" data-subsystem="fan">
+                            <span class="status-icon">🌀</span>
+                            <span class="status-name">风扇</span>
+                            <span class="status-badge normal">正常</span>
+                        </div>
+                        <div class="status-item" data-subsystem="sensor">
+                            <span class="status-icon">📡</span>
+                            <span class="status-name">传感器</span>
+                            <span class="status-badge normal">正常</span>
+                        </div>
+                        <div class="status-item" data-subsystem="cooling">
+                            <span class="status-icon">❄️</span>
+                            <span class="status-name">冷却系统</span>
+                            <span class="status-badge normal">正常</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 故障列表 -->
+                <div class="fault-list-container">
+                    <h3>故障记录</h3>
+                    <div class="fault-list" id="faultList">
+                        <div class="no-faults">
+                            <span class="icon">✅</span>
+                            <span>暂无故障记录</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 配置页面 -->
+        <section class="page" id="configPage">
+            <div class="page-header">
+                <h2>系统配置</h2>
+            </div>
+            
+            <div class="config-panel">
+                <!-- WebSocket服务器配置 -->
+                <div class="config-section">
+                    <h3>WebSocket服务器配置</h3>
+                    <div class="config-form">
+                        <div class="form-group">
+                            <label for="wsHost">服务器地址：</label>
+                            <input type="text" id="wsHost" class="config-input" placeholder="localhost">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="wsPort">端口号：</label>
+                            <input type="number" id="wsPort" class="config-input" placeholder="8080" min="1" max="65535">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button class="btn btn-primary" id="saveConfigBtn">保存配置</button>
+                            <button class="btn btn-secondary" id="testConnectionBtn">测试连接</button>
+                            <button class="btn btn-secondary" id="resetConfigBtn">恢复默认</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 显示设置 -->
+                <div class="config-section">
+                    <h3>显示设置</h3>
+                    <div class="config-form">
+                        <div class="form-group">
+                            <label for="refreshInterval">刷新间隔（毫秒）：</label>
+                            <input type="number" id="refreshInterval" class="config-input" value="2000" min="500" max="10000" step="500">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="chartMaxPoints">图表最大数据点：</label>
+                            <input type="number" id="chartMaxPoints" class="config-input" value="60" min="10" max="200" step="10">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>主题模式：</label>
+                            <div class="theme-selector">
+                                <button class="theme-option active" data-theme="light">
+                                    <span class="icon">☀️</span>
+                                    <span>浅色</span>
+                                </button>
+                                <button class="theme-option" data-theme="dark">
+                                    <span class="icon">🌙</span>
+                                    <span>深色</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 系统信息 -->
+                <div class="config-section">
+                    <h3>系统信息</h3>
+                    <div class="system-info">
+                        <div class="info-item">
+                            <span class="info-label">版本号：</span>
+                            <span class="info-value">v1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">运行模式：</span>
+                            <span class="info-value" id="simulationModeInfo">模拟模式</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">连接状态：</span>
+                            <span class="info-value" id="connectionStatusInfo">未连接</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">已连接客户端：</span>
+                            <span class="info-value" id="clientCountInfo">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-info">
+                <p>&copy; 2024 智能CPU水冷系统. All rights reserved.</p>
+                <p>基于CH32V307嵌入式平台 | Web上位机监控系统</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">使用文档</a>
+                <a href="#" class="footer-link">API文档</a>
+                <a href="#" class="footer-link">关于</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 通知消息容器 -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">加载中...</div>
+    </div>
+
+    <!-- 故障详情弹窗 -->
+    <div class="modal" id="faultDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>故障详情</h3>
+                <button class="modal-close" id="closeFaultModal">&times;</button>
+            </div>
+            <div class="modal-body" id="faultDetailBody">
+                <!-- 故障详情内容将动态插入 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeFaultModalBtn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript模块 -->
+    <script src="js/utils.js?v=16"></script>
+    <script src="js/config.js?v=16"></script>
+    <script src="js/websocket.js?v=16"></script>
+    <script src="js/ui.js?v=16"></script>
+    <script src="js/chart.js?v=16"></script>
+    <script src="js/app.js?v=16"></script>
+</body>
+</html>
